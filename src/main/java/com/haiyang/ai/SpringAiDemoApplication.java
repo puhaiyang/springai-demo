@@ -1,5 +1,10 @@
 package com.haiyang.ai;
 
+import com.vaadin.flow.component.page.AppShellConfigurator;
+import com.vaadin.flow.component.page.Push;
+import com.vaadin.flow.server.PWA;
+import com.vaadin.flow.theme.Theme;
+import com.vaadin.flow.theme.lumo.Lumo;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.ai.chat.memory.InMemoryChatMemory;
@@ -11,7 +16,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
-public class SpringAiDemoApplication {
+@PWA(name = "Developer Assistance project by using Spring AI and Vaadin", shortName = "Developer Assistance")
+@Theme(value = "tpcoder", variant = Lumo.DARK)
+@Push
+public class SpringAiDemoApplication implements AppShellConfigurator {
 
     public static void main(String[] args) {
         SpringApplication.run(SpringAiDemoApplication.class, args);

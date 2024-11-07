@@ -25,7 +25,7 @@ public class MyDeveloperAssistanceView extends VerticalLayout {
     private static void submitPromptListener(String chatId, MessageInput.SubmitEvent e, ChatService chatService, VerticalLayout messageList) {
         var question = e.getValue();
         var userMessage = new MarkdownMessage(question, "You", Color.AVATAR_PRESETS[6]);
-        var assistantMessage = new MarkdownMessage("Assistant", Color.AVATAR_PRESETS[0]);
+        var assistantMessage = new MarkdownMessage("haiyangAI", Color.AVATAR_PRESETS[0]);
         messageList.add(userMessage, assistantMessage);
         chatService.chat(chatId, question)
                 .map(res -> Optional.ofNullable(res.getResult().getOutput().getContent()).orElse(""))
