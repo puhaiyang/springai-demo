@@ -3,4 +3,5 @@ Post: [https://puhaiyang.blog.csdn.net/article/details/143633653](https://puhaiy
 
 ---
 preview
+
 ![preview](https://github.com/puhaiyang/springai-demo/blob/main/previewimg/demo.gif)
