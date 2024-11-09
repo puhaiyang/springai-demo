@@ -1,5 +1,5 @@
 # SpringAi-demo
-Post: [https://github.com/puhaiyang/flowable-springboot](https://github.com/puhaiyang/flowable-springboot)
+Post: [https://puhaiyang.blog.csdn.net/article/details/143633653](https://puhaiyang.blog.csdn.net/article/details/143633653)
 
 ---
 preview
