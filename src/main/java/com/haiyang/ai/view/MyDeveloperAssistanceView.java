@@ -27,7 +27,7 @@ public class MyDeveloperAssistanceView extends VerticalLayout {
         var userMessage = new MarkdownMessage(question, "You", Color.AVATAR_PRESETS[6]);
         var assistantMessage = new MarkdownMessage("haiyangAI", Color.AVATAR_PRESETS[0]);
         messageList.add(userMessage, assistantMessage);
-        chatService.chat(chatId, question)
+        chatService.chatV2(chatId, question)
                 .map(res -> Optional.ofNullable(res.getResult().getOutput().getContent()).orElse(""))
                 .subscribe(assistantMessage::appendMarkdownAsync);
     }

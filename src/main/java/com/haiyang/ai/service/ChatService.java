@@ -31,21 +31,16 @@ public class ChatService {
         return chatId;
     }
 
-//    public Flux<ChatResponse> chat(String chatId, String message) {
-//        Message systemMessage = promptManagementService.getSystemMessage(chatId, message);
-//        UserMessage userMessage = new UserMessage(message);
-//        promptManagementService.addMessage(chatId, userMessage);
-//        logger.debug("Chatting with chatId: {} and message: {}", chatId, message);
-//        Prompt prompt = new Prompt(List.of(systemMessage, userMessage));
-//        return chatModel.stream(prompt);
-//    }
+    public Flux<ChatResponse> chatV2(String chatId, String message) {
+        Message systemMessage = promptManagementService.getSystemMessage(chatId, message);
+        UserMessage userMessage = new UserMessage(message);
+        promptManagementService.addMessage(chatId, userMessage);
+        logger.debug("Chatting with chatId: {} and message: {}", chatId, message);
+        Prompt prompt = new Prompt(List.of(systemMessage, userMessage));
+        return chatModel.stream(prompt);
+    }
 
     public Flux<ChatResponse> chat(String chatId, String message) {
-//        Message systemMessage = promptManagementService.getSystemMessage(chatId, message);
-//        UserMessage userMessage = new UserMessage(message);
-//        promptManagementService.addMessage(chatId, userMessage);
-//        logger.debug("Chatting with chatId: {} and message: {}", chatId, message);
-//        Prompt prompt = new Prompt(List.of(systemMessage, userMessage));
         Prompt prompt = new Prompt(new UserMessage(message));
         return chatModel.stream(prompt);
     }

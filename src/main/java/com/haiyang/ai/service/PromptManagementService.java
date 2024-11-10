@@ -49,18 +49,18 @@ public class PromptManagementService {
     public Message getSystemMessage(String chatId, String message) {
         // Retrieve related documents to query
         List<Document> similarDocuments = this.vectorStore.similaritySearch(message);
-        List<Message> conversationHistory = this.chatHistoryLog.get(chatId);
+//        List<Message> conversationHistory = this.chatHistoryLog.get(chatId);
 
-        String history = conversationHistory.stream()
-                .map(m -> m.getMessageType().name().toLowerCase() + ": " + m.getContent())
-                .collect(Collectors.joining(System.lineSeparator()));
+//        String history = conversationHistory.stream()
+//                .map(m -> m.getMessageType().name().toLowerCase() + ": " + m.getContent())
+//                .collect(Collectors.joining(System.lineSeparator()));
         String documents = similarDocuments.stream().map(Document::getContent)
                 .collect(Collectors.joining(System.lineSeparator()));
 
         Map<String, Object> prepareHistory = Map.of(
                 "documents", documents,
-                "current_date", java.time.LocalDate.now(),
-                "history", history
+                "current_date", java.time.LocalDate.now()
+//                "history", history
         );
         return new SystemPromptTemplate(this.systemPrompt).createMessage(prepareHistory);
     }
