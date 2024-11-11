@@ -1,17 +1,22 @@
 package com.haiyang.ai.controller;
 
+import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.chat.client.advisor.QuestionAnswerAdvisor;
 import org.springframework.ai.chat.messages.UserMessage;
 import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.document.Document;
 import org.springframework.ai.ollama.OllamaChatModel;
+import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.codec.ServerSentEvent;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -46,4 +51,22 @@ public class AIController {
                 .collect(Collectors.joining(System.lineSeparator()));
         return Map.of("result", documents);
     }
+
+    @GetMapping("/ai/generateStream2")
+    public Flux<ServerSentEvent<String>> generateStream2(@RequestParam(value = "message", defaultValue = "Tell me a joke") String message) {
+        String promptContext = """
+                你是一个信息查询助手，你的名字为"haiyangAI"。您的回复将简短明了，但仍然具有信息量和帮助性。
+                今天日期是{current_date}。
+                """;
+        return ChatClient.create(chatModel)
+                .prompt()
+                .system(s -> s.param("current_date", LocalDate.now().toString()))
+                .user(message)
+                .advisors(new QuestionAnswerAdvisor(vectorStore, SearchRequest.defaults().withTopK(2), promptContext))
+                .stream()
+                .content()
+                .map(resp -> ServerSentEvent.builder(resp)
+                        .event("generation").build());
+    }
+
 }
