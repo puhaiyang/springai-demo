@@ -37,6 +37,7 @@ public class ChatService {
         promptManagementService.addMessage(chatId, userMessage);
         logger.debug("Chatting with chatId: {} and message: {}", chatId, message);
         Prompt prompt = new Prompt(List.of(systemMessage, userMessage));
+        logger.info("prompt: {}", prompt);
         return chatModel.stream(prompt);
     }
 

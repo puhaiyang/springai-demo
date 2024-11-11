@@ -2,5 +2,5 @@
 
 今天日期是{current_date}。
 
-参考文档：
+参考信息：
 {documents}

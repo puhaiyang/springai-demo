@@ -1,17 +1,17 @@
 package com.haiyang.ai.service;
 
-import org.springframework.ai.chat.prompt.SystemPromptTemplate;
-import org.springframework.ai.document.Document;
-import org.springframework.ai.vectorstore.VectorStore;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.Resource;
-import org.springframework.stereotype.Service;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ai.chat.messages.AssistantMessage;
 import org.springframework.ai.chat.messages.Message;
 import org.springframework.ai.chat.messages.MessageType;
+import org.springframework.ai.chat.prompt.SystemPromptTemplate;
+import org.springframework.ai.document.Document;
+import org.springframework.ai.vectorstore.SearchRequest;
+import org.springframework.ai.vectorstore.VectorStore;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
@@ -31,7 +31,7 @@ public class PromptManagementService {
     private final Map<String, List<Message>> chatHistoryLog;
     private final Map<String, List<Message>> messageAggregations;
 
-    public PromptManagementService(@Value("classpath:/system-qa.st") Resource systemPrompt, VectorStore vectorStore) {
+    public PromptManagementService(@Value("classpath:/rag/service.st") Resource systemPrompt, VectorStore vectorStore) {
         this.systemPrompt = systemPrompt;
         this.vectorStore = vectorStore;
         this.chatHistoryLog = new ConcurrentHashMap<>();
@@ -48,19 +48,13 @@ public class PromptManagementService {
 
     public Message getSystemMessage(String chatId, String message) {
         // Retrieve related documents to query
-        List<Document> similarDocuments = this.vectorStore.similaritySearch(message);
-//        List<Message> conversationHistory = this.chatHistoryLog.get(chatId);
-
-//        String history = conversationHistory.stream()
-//                .map(m -> m.getMessageType().name().toLowerCase() + ": " + m.getContent())
-//                .collect(Collectors.joining(System.lineSeparator()));
+        List<Document> similarDocuments = this.vectorStore.similaritySearch(SearchRequest.query(message).withTopK(2));
         String documents = similarDocuments.stream().map(Document::getContent)
                 .collect(Collectors.joining(System.lineSeparator()));
 
         Map<String, Object> prepareHistory = Map.of(
                 "documents", documents,
                 "current_date", java.time.LocalDate.now()
-//                "history", history
         );
         return new SystemPromptTemplate(this.systemPrompt).createMessage(prepareHistory);
     }
@@ -80,7 +74,6 @@ public class PromptManagementService {
     }
 
     private String getProperty(Message message, String key) {
-//        return message.getProperties().getOrDefault(key, "").toString();
         return "";
     }
 
