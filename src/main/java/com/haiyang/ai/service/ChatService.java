@@ -7,6 +7,7 @@ import org.springframework.ai.chat.messages.UserMessage;
 import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.ai.chat.prompt.Prompt;
+import org.springframework.ai.ollama.api.OllamaOptions;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 
@@ -39,6 +40,12 @@ public class ChatService {
         Prompt prompt = new Prompt(List.of(systemMessage, userMessage));
         logger.info("prompt: {}", prompt);
         return chatModel.stream(prompt);
+    }
+
+    public Flux<ChatResponse> chatWithCallback(String chatId, String message) {
+        UserMessage userMessage = new UserMessage(message);
+        ChatResponse response = chatModel.call(new Prompt(userMessage, OllamaOptions.builder().withFunction("getSubwayStationDetails").build()));
+        return Flux.just(response);
     }
 
     public Flux<ChatResponse> chat(String chatId, String message) {
